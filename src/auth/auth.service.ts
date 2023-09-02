@@ -7,11 +7,6 @@ import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
-
-  private EXPIRATION_TIME = "7 days";
-  private ISSUER = "Bianca";
-  private AUDIENCE = "users";
-
   constructor(
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService) { }
@@ -32,24 +27,16 @@ export class AuthService {
   }
 
   private async createToken(user: Users) {
-    const { id, email } = user;
+    const { id } = user;
 
-    const token = this.jwtService.sign({ email }, {
-      expiresIn: this.EXPIRATION_TIME,
-      subject: String(id),
-      issuer: this.ISSUER,
-      audience: this.AUDIENCE
-    });
-
+    const token = this.jwtService.sign({ id })
     return { token }
+
   }
 
   checkToken(token: string) {
-    const data = this.jwtService.verify(token, {
-      audience: this.AUDIENCE,
-      issuer: this.ISSUER
-    });
-    return data;
+    const data = this.jwtService.verify(token)
+    return data
   }
 
 }
