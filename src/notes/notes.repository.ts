@@ -17,19 +17,19 @@ export class NotesRepository {
   }
 
   async findAll(userId: number) {
-    return await this.prisma.credentials.findMany({
+    return await this.prisma.notes.findMany({
       where: {userId}
     })
   }
 
   async findOne(id: number) {
-    return await this.prisma.credentials.findUnique({
+    return await this.prisma.notes.findUnique({
       where:{id}
     })
   }
 
   async remove(id: number) {
-    return await this.prisma.credentials.delete({
+    return await this.prisma.notes.delete({
       where: {id}
     })
   }
