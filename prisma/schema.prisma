@@ -18,7 +18,6 @@ model Users {
   credential Credentials[]
   note Notes[]
   credCard CredCards[]
-  token Tokens[]
 
   @@map("user")
 }
@@ -28,6 +27,7 @@ model Credentials {
   userName String
   password String
   credentialTitle String
+  url String
   userId Int
   user Users @relation(fields: [userId], references: [id])
   
@@ -62,13 +62,4 @@ model CredCards {
 
   @@unique([userId, cardTitle])
   @@map("credcard")
-}
-
-model Tokens {
-  id Int @id @default(autoincrement())
-  token Int @unique
-  userId Int
-  user Users @relation(fields: [userId], references: [id])
-
-  @@map("token")
 }

@@ -12,6 +12,7 @@ export class CredentialRepository {
         userName: createCredentialDto.userName,
         password: createCredentialDto.password,
         credentialTitle: createCredentialDto.credentialTitle,
+        url: createCredentialDto.url,
         userId
       }
     })

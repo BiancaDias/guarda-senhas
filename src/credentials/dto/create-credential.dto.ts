@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator"
+import { IsNotEmpty, IsString, IsUrl } from "class-validator"
 
 export class CreateCredentialDto {
 
@@ -13,4 +13,9 @@ export class CreateCredentialDto {
   @IsString()
   @IsNotEmpty()
   credentialTitle: string
+
+  @IsString()
+  @IsNotEmpty()
+  @IsUrl()
+  url: string
 }
