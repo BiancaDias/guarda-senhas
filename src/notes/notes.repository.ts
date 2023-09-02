@@ -1,18 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCredentialDto } from './dto/create-credential.dto';
 import { PrismaService } from 'nestjs-prisma';
+import { CreateNoteDto } from './dto/create-note.dto';
 
 @Injectable()
-export class CredentialRepository {
+export class NotesRepository {
   constructor(private readonly prisma: PrismaService) { }
 
-  async create(createCredentialDto: CreateCredentialDto, userId: number) {
-    return await this.prisma.credentials.create({
+  async create(createNoteDto: CreateNoteDto, userId: number) {
+    return await this.prisma.notes.create({
       data: {
-        userName: createCredentialDto.userName,
-        password: createCredentialDto.password,
-        credentialTitle: createCredentialDto.credentialTitle,
-        url: createCredentialDto.url,
+        note: createNoteDto.note,
+        noteTitle: createNoteDto.noteTitle,
         userId
       }
     })
