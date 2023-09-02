@@ -11,10 +11,6 @@ export class UsersRepository {
     return await this.prisma.users.create({ data: createUserDto})
   }
   
-  login(createUserDto: CreateUserDto){
-    return ""
-  }
-  
   async getUserByEmail(email: string) {
     return await this.prisma.users.findUnique({ where: {email}})
   }
