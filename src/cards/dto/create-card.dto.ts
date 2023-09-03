@@ -8,7 +8,6 @@ export class CreateCardDto {
 
   @IsString()
   @IsNotEmpty()
-  @Length(16, 16)
   cardNumber: string
 
   @IsAlpha()
