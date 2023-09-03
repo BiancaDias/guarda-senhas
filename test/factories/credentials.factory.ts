@@ -1,5 +1,5 @@
 import { PrismaService } from  "../../src/prisma/prisma.service";
-
+import Cryptr from 'cryptr';
 
 export class CredentialFactory {
   private userName: string;
@@ -7,8 +7,11 @@ export class CredentialFactory {
   private credentialTitle: string;
   private userId: number
   private url: string
-
-  constructor(private readonly prisma: PrismaService) { }
+  private cryptr: Cryptr
+  constructor(private readonly prisma: PrismaService) { 
+    const Cryptr = require('cryptr');
+    this.cryptr = new Cryptr(process.env.SECRET_CRYPTR);
+  }
 
   setUserId(userId: number){
     return this.userId = userId;
@@ -18,7 +21,7 @@ export class CredentialFactory {
   }
 
   setPassword(password: string){
-    return this.password = password;
+    return this.password = this.cryptr.encrypt(password);
   }
 
   setCredentialTitle(credentialTitle: string){

@@ -21,7 +21,6 @@ export class CredentialsService {
 
   async findAll(user: Users) {
     const credentials = await this.repository.findAll(user.id);
-    console.log(credentials)
     const credentialsDescrypt = credentials.map((credential)=>({
       id: credential.id,
       userName: credential.userName,

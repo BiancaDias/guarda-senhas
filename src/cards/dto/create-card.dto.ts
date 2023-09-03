@@ -15,17 +15,17 @@ export class CreateCardDto {
   @IsNotEmpty()
   cardName: string
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  secutityCode: number
+  secutityCode: string
 
   @IsString()
   @IsNotEmpty()
   expirationDate: string
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  password: number
+  password: string
 
   @IsNotEmpty()
   @IsBoolean()

@@ -81,6 +81,7 @@ describe('Cards (e2e)', () => {
       .post('/cards')
       .send(card)
       .set('Authorization', `Bearer ${token}`) 
+      
       expect(postCard.status).toBe(HttpStatus.CREATED)
   });
 

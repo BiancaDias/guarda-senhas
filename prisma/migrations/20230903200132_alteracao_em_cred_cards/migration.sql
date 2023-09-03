@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "credcard" ALTER COLUMN "secutityCode" SET DATA TYPE TEXT,
+ALTER COLUMN "password" SET DATA TYPE TEXT;

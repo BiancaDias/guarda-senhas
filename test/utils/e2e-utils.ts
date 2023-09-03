@@ -14,9 +14,9 @@ export class E2EUtils {
       cardTitle: cardTitle,
       cardNumber: faker.finance.creditCardNumber(),
       cardName: faker.person.firstName(), 
-      secutityCode: faker.number.int({ min: 100, max: 999 }),
+      secutityCode: (faker.number.int({ min: 100, max: 999 })).toString(),
       expirationDate: faker.date.future().toISOString().split('T')[0],
-      password: faker.number.int({ min: 1000, max: 9999 }),
+      password: (faker.number.int({ min: 1000, max: 9999 })).toString(),
       virtual: faker.datatype.boolean(),
       isCredit: faker.datatype.boolean(),
       isDebit: faker.datatype.boolean()

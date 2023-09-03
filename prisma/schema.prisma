@@ -51,9 +51,9 @@ model CredCards {
   cardTitle String
   cardNumber String
   cardName String
-  secutityCode Int
+  secutityCode String
   expirationDate String
-  password Int
+  password String
   virtual Boolean
   isCredit Boolean
   isDebit Boolean
