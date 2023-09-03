@@ -1,17 +1,14 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { Users } from '@prisma/client';
-import { NotesRepository } from './notes.repository';
-import { CreateNoteDto } from './dto/create-note.dto';
-
+import { CreateCardDto } from './dto/create-card.dto';
+import { CardsRepository } from './cards.repository';
 
 @Injectable()
-export class NotesService {
-
-  constructor(private readonly repository: NotesRepository){}
-
-  async create(createNoteDto: CreateNoteDto, user: Users) {
+export class CardsService {
+  constructor(private readonly repository: CardsRepository){}
+  async create(createCardDto: CreateCardDto, user: Users) {
   
-    return await this.repository.create(createNoteDto, user.id);
+    return await this.repository.create(createCardDto, user.id);
   }
 
   async findAll(user: Users) {
