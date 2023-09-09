@@ -1,6 +1,7 @@
 import { PrismaService } from "../../src/prisma/prisma.service";
 import { faker } from '@faker-js/faker';
 import { UserFactory } from "../factories/users.factory";
+import { NotesFactory } from "../factories/notes.factory";
 
 export class E2EUtils {
 
@@ -38,6 +39,13 @@ export class E2EUtils {
     }
   }
 
+  static note(){
+    return {
+      noteTitle: "Lembrete",
+      note: "Muitos bugs pra corrigir"
+    }
+  }
+
   static userBadPassword(){
     return {
       email: "bianca@bianca.com",
@@ -56,5 +64,13 @@ export class E2EUtils {
     userFactory.setEmail("bianca1@bianca.com");
     userFactory.setPassword("Senha1@S3gura");
     return await userFactory.persist();
+  }
+
+  static async createNote(prisma: PrismaService, id: number){
+    const notesFactory = await new NotesFactory(prisma)
+    notesFactory.setnoteTitle("Lembrete");
+    notesFactory.setNote("Não Esquecer de corrigir os bugs");
+    notesFactory.setUserId(id)
+    return await notesFactory.persist();
   }
 }

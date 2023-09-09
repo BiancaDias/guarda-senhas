@@ -36,21 +36,12 @@ describe('Notes (e2e)', () => {
   })
 
   it('GET /notes => should return 200', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
 
-    const notesFactory = await new NotesFactory(prisma)
-    notesFactory.setnoteTitle("Lembrete");
-    notesFactory.setNote("Não Esquecer de corrigir os bugs");
-    notesFactory.setUserId(signup.id)
-    await notesFactory.persist();
+    const signup = await E2EUtils.createUser1(prisma);
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    await E2EUtils.createNote(prisma, signup.id);
+
+    const user = E2EUtils.user();
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -64,21 +55,12 @@ describe('Notes (e2e)', () => {
   });
 
   it('GET /notes/id => should return 200', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
+    
+    const signup = await E2EUtils.createUser1(prisma);
 
-    const notesFactory = await new NotesFactory(prisma)
-    notesFactory.setnoteTitle("Lembrete");
-    notesFactory.setNote("Não Esquecer de corrigir os bugs");
-    notesFactory.setUserId(signup.id)
-    const note = await notesFactory.persist();
+    const note = await E2EUtils.createNote(prisma, signup.id);
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user();
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -93,27 +75,13 @@ describe('Notes (e2e)', () => {
 
   it('GET /notes/id => should return 403', async() => {
     //usuario 1
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
-
+    await E2EUtils.createUser1(prisma);
     //usuario 2
-    const userFactory2 = await new UserFactory(prisma)
-    userFactory2.setEmail("bianca1@bianca.com");
-    userFactory2.setPassword("Senha@S3gura");
-    const signup2 = await userFactory2.persist();
+    const signup2 = await E2EUtils.createUser2(prisma);
 
-    const notesFactory = await new NotesFactory(prisma)
-    notesFactory.setnoteTitle("Lembrete");
-    notesFactory.setNote("Não Esquecer de corrigir os bugs");
-    notesFactory.setUserId(signup2.id)
-    const note = await notesFactory.persist();
+    const note = await E2EUtils.createNote(prisma, signup2.id);
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user();
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -127,15 +95,10 @@ describe('Notes (e2e)', () => {
   });
 
   it('GET /notes/id => should return 404', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    await userFactory.persist();    
+    
+    await E2EUtils.createUser1(prisma);
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user();
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -149,24 +112,17 @@ describe('Notes (e2e)', () => {
   });
 
   it('POST /notes => should return 201', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    await userFactory.persist();
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    await E2EUtils.createUser1(prisma);
+
+    const user = E2EUtils.user();
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
     .send(user)
 
-    const note = {
-      noteTitle: "Lembrete urgente",
-      note: "Muitos bugs pra corrigir"
-    }
+    const note = E2EUtils.note();
+
     const token = signin.body.token;
     return request(app.getHttpServer())
       .post('/notes')
@@ -176,26 +132,14 @@ describe('Notes (e2e)', () => {
   });
 
   it('POST /notes => should return 409', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
+    
+    const signup = await E2EUtils.createUser1(prisma);
 
-    const notesFactory = await new NotesFactory(prisma)
-    notesFactory.setnoteTitle("Lembrete");
-    notesFactory.setNote("Não Esquecer de corrigir os bugs");
-    notesFactory.setUserId(signup.id)
-    await notesFactory.persist();
+    await E2EUtils.createNote(prisma, signup.id);
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user();
 
-    const note = {
-      noteTitle: "Lembrete",
-      note: "teste"
-    }
+    const note = E2EUtils.note();
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -210,24 +154,17 @@ describe('Notes (e2e)', () => {
   });
 
   it('POST /notes should return 400', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    await userFactory.persist();    
+    
+    await E2EUtils.createUser1(prisma);
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user();
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
     .send(user)
 
-    const note = {
-      noteTitle: "Lembrete urgente",
-      
-    }
+    const note = { noteTitle: "Lembrete urgente"}
+
     const token = signin.body.token;
     return request(app.getHttpServer())
       .post('/notes')
@@ -237,21 +174,12 @@ describe('Notes (e2e)', () => {
   });
 
   it('DELETE /notes/id => should return 200', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
 
-    const notesFactory = await new NotesFactory(prisma)
-    notesFactory.setnoteTitle("Lembrete");
-    notesFactory.setNote("Não Esquecer de corrigir os bugs");
-    notesFactory.setUserId(signup.id)
-    const note = await notesFactory.persist();
+    const signup = await E2EUtils.createUser1(prisma);
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const note = await E2EUtils.createNote(prisma, signup.id)
+
+    const user = E2EUtils.user();
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -266,27 +194,14 @@ describe('Notes (e2e)', () => {
 
   it('DELETE /notes/id => should return 403', async() => {
     //usuario 1
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
+    await E2EUtils.createUser1(prisma)
 
-    //usuario 2
-    const userFactory2 = await new UserFactory(prisma)
-    userFactory2.setEmail("bianca1@bianca.com");
-    userFactory2.setPassword("Senha@S3gura");
-    const signup2 = await userFactory2.persist();
+    //usuario 2    
+    const signup2 = await E2EUtils.createUser2(prisma)
 
-    const notesFactory = await new NotesFactory(prisma)
-    notesFactory.setnoteTitle("Lembrete");
-    notesFactory.setNote("Não Esquecer de corrigir os bugs");
-    notesFactory.setUserId(signup2.id)
-    const notes = await notesFactory.persist();
+    const notes = await E2EUtils.createNote(prisma, signup2.id)
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user();
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
