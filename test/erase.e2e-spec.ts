@@ -35,19 +35,13 @@ describe('Notes (e2e)', () => {
 
 
   it('DELETE /erase => should return 403', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    await userFactory.persist();
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    await E2EUtils.createUser1(prisma)
+
+    const user = E2EUtils.user();
     
-    const password = {
-      password: "Senha@S3gura."
-    }
+    const password = {password: "Senha@S3gura."}
+
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
     .send(user)
@@ -61,15 +55,10 @@ describe('Notes (e2e)', () => {
   });
 
   it('DELETE /erase => should return 200', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    await userFactory.persist();
+    
+    await E2EUtils.createUser1(prisma)
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user();
     
     const password = {
       password: "Senha@S3gura"
