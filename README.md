@@ -1,73 +1,66 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Guarda Senhas - Back
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Navegar na internet pode ser uma atividade muito divertida, mas ao mesmo tempo, muito perigosa.Vemos todos os dias noticias de inumeros golpes virtuais. E como poderíamos nos proteger disso? 
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Criar diferentes senhas para seus aplicativos e seguras, com varios caracteres diferentes é uma forma. Porém como memorizar tudo isso? Um arquivo no google docs com o nome de "senhas" não me parece muito seguro...
 
-## Description
+Pensando nisso, esse projeto serve como uma "chave mestra", onde você cria um login e salva as senhas que desejar de forma segura, sendo acessado apenas por você usando a chave única que você criou. E não só isso! Sabe aquela ideia de R$ 1 milhão que você teve que não pode esquecer e nem espalhar por ai? Você pode salvar como uma nota segura. E também aquele monte de cartões que você possui. Aqui fica tudo salvo e protegido.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+## Tecnologias usadas
 
-```bash
-$ npm install
-```
+- O projeto segue o paradigma de orientação a objetos, feito em Nest.js;
+- A criptografia do usuário é feita com bcrypt e das senhas guardadas é feita com cryptr;
+- O sistema é todo testado com jest;
+- O banco usado é o PostgresSQL e é gerenciado pelo Prisma.
 
-## Running the app
+segue abaixo sua documentação com o detalhamento de suas rotas:
+
+https://guarda-senhas.onrender.com/api
+
+Segue abaixo as instruções de configuração:
+
+Certifiquse-se de ter as seguintes ferramentas instaladas e atualizadas no seu sistema: 
+
+- [Node.js](https://nodejs.org/)
+- [npm](https://www.npmjs.com/)
+
+
+## Instalação
+
+Siga estas etapas para configurar e executar o projeto localmente:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+   git clone https://github.com/BiancaDias/guarda-senhas
+   cd guarda-senhas
 ```
 
-## Test
+### 1 - Instalar as dependencias
+```bash
+  npm install
+```
+### 2 - Configurar a variavel de ambiente
+
+Crie um arquivo .env na raiz do projeto com as variáveis de ambiente necessárias. Você pode usar o arquivo .env.example como um modelo.
+
+### 3 - Configurar o banco de dados com o Prisma
+
+Execute as seguintes etapas
+```bash
+  npx prisma generate
+  npx prisma migrate dev
+```
+
+### 4 - Execute o projeto
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+  npm run start:dev
 ```
+## Testes
 
-## Support
+Para execução de testes, certifique-se que você tenha na raiz do projeto um arquivo .env.test que contenha o seu banco de testes.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+Para executá-los, use o comando 
+```bash
+  npm run test:e2e
+```
