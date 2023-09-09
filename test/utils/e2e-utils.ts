@@ -2,6 +2,7 @@ import { PrismaService } from "../../src/prisma/prisma.service";
 import { faker } from '@faker-js/faker';
 import { UserFactory } from "../factories/users.factory";
 import { NotesFactory } from "../factories/notes.factory";
+import { CredentialFactory } from "../factories/credentials.factory";
 
 export class E2EUtils {
 
@@ -39,6 +40,15 @@ export class E2EUtils {
     }
   }
 
+  static credential(){
+    return {
+      userName: "bianca@bianca.com",
+      password: "Senha@S3gura",
+      url: "facebook.com",
+      credentialTitle: 'Facebook'
+    }
+  }
+
   static note(){
     return {
       noteTitle: "Lembrete",
@@ -67,10 +77,20 @@ export class E2EUtils {
   }
 
   static async createNote(prisma: PrismaService, id: number){
-    const notesFactory = await new NotesFactory(prisma)
+    const notesFactory = new NotesFactory(prisma)
     notesFactory.setnoteTitle("Lembrete");
     notesFactory.setNote("Não Esquecer de corrigir os bugs");
     notesFactory.setUserId(id)
     return await notesFactory.persist();
+  }
+
+  static async createCredential(prisma: PrismaService, id: number){
+    const credentialFactory = new CredentialFactory(prisma)
+    credentialFactory.setCredentialTitle("Facebook");
+    credentialFactory.setPassword("Senha");
+    credentialFactory.setUsername("MyFacebook")
+    credentialFactory.setUrl("facebook.com")
+    credentialFactory.setUserId(id)
+    return await credentialFactory.persist();
   }
 }

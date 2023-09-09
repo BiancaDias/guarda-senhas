@@ -36,25 +36,12 @@ describe('Credentials (e2e)', () => {
   })
 
   it('GET /credentials => should return 200', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
 
-    // const cryptr = new Cryptr("MyKey")
-    // const hash = cryptr.encrypt("Senha@S3gura")
-    const credentialFactory = await new CredentialFactory(prisma)
-    credentialFactory.setCredentialTitle("Facebook");
-    credentialFactory.setPassword("Senha");
-    credentialFactory.setUsername("MyFacebook")
-    credentialFactory.setUrl("facebook.com")
-    credentialFactory.setUserId(signup.id)
-    await credentialFactory.persist();
+    const signup = await E2EUtils.createUser1(prisma)
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    await E2EUtils.createCredential(prisma, signup.id)
+
+    const user = E2EUtils.user()
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -68,30 +55,17 @@ describe('Credentials (e2e)', () => {
   });
 
   it('POST /credentials => should return 201', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    await userFactory.persist();
-
-    // const cryptr = new Cryptr("MyKey")
-    // const hash = cryptr.encrypt("Senha@S3gura")
     
+    await E2EUtils.createUser1(prisma)
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user()
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
     .send(user)
 
-    const credential = {
-      userName: "bianca@bianca.com",
-      password: "Senha@S3gura",
-      url: "facebook.com",
-      credentialTitle: 'facebook'
-    }
+    const credential = E2EUtils.credential()
+
     const token = signin.body.token;
     return request(app.getHttpServer())
       .post('/credentials')
@@ -101,32 +75,14 @@ describe('Credentials (e2e)', () => {
   });
 
   it('POST /credentials => should return 400', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
+    
+    const signup = await E2EUtils.createUser1(prisma)
 
-    // const cryptr = new Cryptr("MyKey")
-    // const hash = cryptr.encrypt("Senha@S3gura")
-    const credentialFactory = await new CredentialFactory(prisma)
-    credentialFactory.setCredentialTitle("facebook");
-    credentialFactory.setPassword("Senha");
-    credentialFactory.setUsername("MyFacebook")
-    credentialFactory.setUrl("facebook.com")
-    credentialFactory.setUserId(signup.id)
-    await credentialFactory.persist();
+    await E2EUtils.createCredential(prisma, signup.id)
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user()
 
-    const credential = {
-      userName: "bianca@bianca.com",
-      password: "Senha@S3gura",
-      url: "facebook.com",
-      credentialTitle: 'facebook'
-    }
+    const credential = E2EUtils.credential()
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -141,56 +97,34 @@ describe('Credentials (e2e)', () => {
   });
 
   it('POST /credentials => should return 400', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    await userFactory.persist();
 
-    // const cryptr = new Cryptr("MyKey")
-    // const hash = cryptr.encrypt("Senha@S3gura")
-    
+    await E2EUtils.createUser1(prisma)
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user()
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
     .send(user)
 
-    const credential = {
+    const badCredential = {
       userName: "bianca@bianca.com",
       password: "Senha@S3gura",
     }
     const token = signin.body.token;
     return request(app.getHttpServer())
       .post('/credentials')
-      .send(credential)
+      .send(badCredential)
       .set('Authorization', `Bearer ${token}`) 
       .expect(HttpStatus.BAD_REQUEST)
   });
 
   it('GET /credentials/id => should return 200', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
+    
+    const signup = await E2EUtils.createUser1(prisma)
 
-    // const cryptr = new Cryptr("MyKey")
-    // const hash = cryptr.encrypt("Senha@S3gura")
-    const credentialFactory = await new CredentialFactory(prisma)
-    credentialFactory.setCredentialTitle("Facebook");
-    credentialFactory.setPassword("Senha");
-    credentialFactory.setUsername("MyFacebook")
-    credentialFactory.setUrl("facebook.com")
-    credentialFactory.setUserId(signup.id)
-    const credential = await credentialFactory.persist();
+    const credential =await E2EUtils.createCredential(prisma, signup.id)
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user()
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -205,31 +139,13 @@ describe('Credentials (e2e)', () => {
 
   it('GET /credentials/id => should return 403', async() => {
     //usuario 1
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
-
+    await E2EUtils.createUser1(prisma);
     //usuario 2
-    const userFactory2 = await new UserFactory(prisma)
-    userFactory2.setEmail("bianca1@bianca.com");
-    userFactory2.setPassword("Senha@S3gura");
-    const signup2 = await userFactory2.persist();
+    const signup2 = await E2EUtils.createUser2(prisma);
 
-    // const cryptr = new Cryptr("MyKey")
-    // const hash = cryptr.encrypt("Senha@S3gura")
-    const credentialFactory = await new CredentialFactory(prisma)
-    credentialFactory.setCredentialTitle("Facebook");
-    credentialFactory.setPassword("Senha");
-    credentialFactory.setUsername("MyFacebook")
-    credentialFactory.setUrl("facebook.com")
-    credentialFactory.setUserId(signup2.id)
-    const credential = await credentialFactory.persist();
+    const credential = await E2EUtils.createCredential(prisma, signup2.id)
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user()
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -243,19 +159,10 @@ describe('Credentials (e2e)', () => {
   });
 
   it('GET /credentials/id => should return 404', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    await userFactory.persist();
-
-    // const cryptr = new Cryptr("MyKey")
-    // const hash = cryptr.encrypt("Senha@S3gura")
     
+    await E2EUtils.createUser1(prisma);
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user()
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -269,25 +176,12 @@ describe('Credentials (e2e)', () => {
   });
 
   it('DELETE /credentials/id => should return 200', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
+    
+    const signup = await E2EUtils.createUser1(prisma);
 
-    // const cryptr = new Cryptr("MyKey")
-    // const hash = cryptr.encrypt("Senha@S3gura")
-    const credentialFactory = await new CredentialFactory(prisma)
-    credentialFactory.setCredentialTitle("Facebook");
-    credentialFactory.setPassword("Senha");
-    credentialFactory.setUsername("MyFacebook")
-    credentialFactory.setUrl("facebook.com")
-    credentialFactory.setUserId(signup.id)
-    const credential = await credentialFactory.persist();
+    const credential = await E2EUtils.createCredential(prisma, signup.id)
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user()
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -302,31 +196,13 @@ describe('Credentials (e2e)', () => {
 
   it('DELETE /credentials/id => should return 403', async() => {
     //usuario 1
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
-
+    await E2EUtils.createUser1(prisma);
     //usuario 2
-    const userFactory2 = await new UserFactory(prisma)
-    userFactory2.setEmail("bianca1@bianca.com");
-    userFactory2.setPassword("Senha@S3gura");
-    const signup2 = await userFactory2.persist();
+    const signup2 = await E2EUtils.createUser2(prisma);
 
-    // const cryptr = new Cryptr("MyKey")
-    // const hash = cryptr.encrypt("Senha@S3gura")
-    const credentialFactory = await new CredentialFactory(prisma)
-    credentialFactory.setCredentialTitle("Facebook");
-    credentialFactory.setPassword("Senha");
-    credentialFactory.setUsername("MyFacebook")
-    credentialFactory.setUrl("facebook.com")
-    credentialFactory.setUserId(signup2.id)
-    const credential = await credentialFactory.persist();
+    const credential = await E2EUtils.createCredential(prisma, signup2.id)
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user()
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
