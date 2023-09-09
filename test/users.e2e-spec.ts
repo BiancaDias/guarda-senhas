@@ -20,7 +20,7 @@ describe('Users (e2e)', () => {
       .compile();
 
     app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe())
+    app.useGlobalPipes(new ValidationPipe());
     const { httpAdapter } = app.get(HttpAdapterHost);
     app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
     await app.init();
@@ -34,10 +34,9 @@ describe('Users (e2e)', () => {
   })
 
   it('POST /sign-in => should return 201', () => {
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+
+    const user = E2EUtils.user()
+
     return request(app.getHttpServer())
       .post('/users/sign-up')
       .send(user)
@@ -45,15 +44,11 @@ describe('Users (e2e)', () => {
   });
 
   it('POST /sign-up => should return 409', async () => {
-    const userFactory = await new UserFactory(prisma)
-    await userFactory.setEmail("bianca@bianca.com");
-    await userFactory.setPassword("Senha@S3gura");
-    await userFactory.persist();
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    await E2EUtils.createUser1(prisma);
+
+    const user = E2EUtils.user()
+
     return request(app.getHttpServer())
       .post('/users/sign-up')
       .send(user)
@@ -61,36 +56,30 @@ describe('Users (e2e)', () => {
   });
 
   it('POST /sign-in => should return 400', () => {
-    const user = {
-      email: "bianca@bianca.com",
-      password: "123456"
-    }
+
+    const user = E2EUtils.userBadPassword()
+
     return request(app.getHttpServer())
       .post('/users/sign-up')
       .send(user)
       .expect(HttpStatus.BAD_REQUEST)
   });
   it('POST /sign-in => should return 409', async () => {
-      const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+
+    const user = E2EUtils.user()
+
     return request(app.getHttpServer())
       .post('/users/sign-in')
       .send(user)
       .expect(HttpStatus.UNAUTHORIZED)
   });
 
-  it('POST /sign-in => should return 409', async () => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    await userFactory.persist();
+  it('POST /sign-in => should return 200', async () => {
+    
+    await E2EUtils.createUser1(prisma)
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user()
+    
     return await request(app.getHttpServer())
       .post('/users/sign-in')
       .send(user)
