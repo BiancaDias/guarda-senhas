@@ -35,18 +35,13 @@ describe('Cards (e2e)', () => {
   })
 
   it('GET /cards => should return 200', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
+    
+    const signup = await E2EUtils.createUser1(prisma)
 
-    const cardFactory = await new CardFactory(prisma, signup.id)
+    const cardFactory = new CardFactory(prisma, signup.id)
     await cardFactory.persist();
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user();
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -60,15 +55,10 @@ describe('Cards (e2e)', () => {
   });
 
   it('POST /cards => should return 201', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    await userFactory.persist();
+    
+    await E2EUtils.createUser1(prisma)
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user();
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -86,18 +76,13 @@ describe('Cards (e2e)', () => {
   });
 
   it('POST /cards => should return 409', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
+    
+    const signup = await E2EUtils.createUser1(prisma)
 
-    const cardFactory = await new CardFactory(prisma, signup.id)
+    const cardFactory = new CardFactory(prisma, signup.id)
     const cardTitle = await cardFactory.persist();
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user();
 
     const card = E2EUtils.createCredCard(cardTitle.cardTitle);
     
@@ -114,16 +99,10 @@ describe('Cards (e2e)', () => {
   });
 
   it('POST /cards => should return 400', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    await userFactory.persist();
+    
+    await E2EUtils.createUser1(prisma)
 
-
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user();
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -139,18 +118,13 @@ describe('Cards (e2e)', () => {
   });
 
   it('GET /cards/id => should return 200', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
+  
+    const signup = await E2EUtils.createUser1(prisma)
 
-    const cardFactory = await new CardFactory(prisma, signup.id)
+    const user = E2EUtils.user();
+
+    const cardFactory = new CardFactory(prisma, signup.id)
     const card = await cardFactory.persist();
-
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -164,25 +138,15 @@ describe('Cards (e2e)', () => {
   });
 
   it('GET /cards/id => should return 403', async() => {
-    //usuario 1
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
+   //usuario 1
+  await E2EUtils.createUser1(prisma);
+   //usuario 2
+  const signup2 = await E2EUtils.createUser2(prisma);
 
-    //usuario 2
-    const userFactory2 = await new UserFactory(prisma)
-    userFactory2.setEmail("bianca1@bianca.com");
-    userFactory2.setPassword("Senha@S3gura");
-    const signup2 = await userFactory2.persist();
-
-    const cardFactory = await new CardFactory(prisma, signup2.id)
+    const cardFactory = new CardFactory(prisma, signup2.id)
     const card = await cardFactory.persist();
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user();
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -196,15 +160,10 @@ describe('Cards (e2e)', () => {
   });
 
   it('GET /cards/id => should return 404', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    await userFactory.persist();
+    
+    await E2EUtils.createUser1(prisma);
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user();
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -218,18 +177,13 @@ describe('Cards (e2e)', () => {
   });
 
   it('DELETE /cards/id => should return 200', async() => {
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
+    
+    const signup = await E2EUtils.createUser1(prisma);
 
-    const cardFactory = await new CardFactory(prisma, signup.id)
+    const cardFactory = new CardFactory(prisma, signup.id)
     const card = await cardFactory.persist();
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user();
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')
@@ -244,24 +198,14 @@ describe('Cards (e2e)', () => {
 
   it('DELETE /cards/id => should return 403', async() => {
     //usuario 1
-    const userFactory = await new UserFactory(prisma)
-    userFactory.setEmail("bianca@bianca.com");
-    userFactory.setPassword("Senha@S3gura");
-    const signup = await userFactory.persist();
-
+    await E2EUtils.createUser1(prisma);
     //usuario 2
-    const userFactory2 = await new UserFactory(prisma)
-    userFactory2.setEmail("bianca1@bianca.com");
-    userFactory2.setPassword("Senha@S3gura");
-    const signup2 = await userFactory2.persist();
+    const signup2 = await E2EUtils.createUser2(prisma);
 
-    const cardFactory = await new CardFactory(prisma, signup2.id)
+    const cardFactory = new CardFactory(prisma, signup2.id)
     const card = await cardFactory.persist();
 
-    const user = {
-      email: "bianca@bianca.com",
-      password: "Senha@S3gura"
-    }
+    const user = E2EUtils.user();
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')

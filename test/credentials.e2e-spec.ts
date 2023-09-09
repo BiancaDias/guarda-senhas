@@ -6,9 +6,6 @@ import { PrismaService } from '../src/prisma/prisma.service';
 import { HttpAdapterHost } from '@nestjs/core';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 import { E2EUtils } from './utils/e2e-utils';
-import { UserFactory } from './factories/users.factory';
-import { CredentialFactory } from './factories/credentials.factory';
-import Cryptr from 'cryptr';
 
 describe('Credentials (e2e)', () => {
   let app: INestApplication;
@@ -37,11 +34,11 @@ describe('Credentials (e2e)', () => {
 
   it('GET /credentials => should return 200', async() => {
 
-    const signup = await E2EUtils.createUser1(prisma)
+    const signup = await E2EUtils.createUser1(prisma);
 
-    await E2EUtils.createCredential(prisma, signup.id)
+    await E2EUtils.createCredential(prisma, signup.id);
 
-    const user = E2EUtils.user()
+    const user = E2EUtils.user();
     
     const signin = await request(app.getHttpServer())
     .post('/users/sign-in')

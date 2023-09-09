@@ -6,9 +6,6 @@ import { PrismaService } from '../src/prisma/prisma.service';
 import { HttpAdapterHost } from '@nestjs/core';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 import { E2EUtils } from './utils/e2e-utils';
-import { UserFactory } from './factories/users.factory';
-import { NotesFactory } from './factories/notes.factory';
-
 
 describe('Notes (e2e)', () => {
   let app: INestApplication;

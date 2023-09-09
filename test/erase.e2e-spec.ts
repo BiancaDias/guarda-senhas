@@ -6,7 +6,6 @@ import { PrismaService } from '../src/prisma/prisma.service';
 import { HttpAdapterHost } from '@nestjs/core';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 import { E2EUtils } from './utils/e2e-utils';
-import { UserFactory } from './factories/users.factory';
 
 describe('Notes (e2e)', () => {
   let app: INestApplication;
@@ -55,7 +54,7 @@ describe('Notes (e2e)', () => {
   });
 
   it('DELETE /erase => should return 200', async() => {
-    
+
     await E2EUtils.createUser1(prisma)
 
     const user = E2EUtils.user();

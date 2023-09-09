@@ -6,7 +6,6 @@ import { PrismaService } from '../src/prisma/prisma.service';
 import { HttpAdapterHost } from '@nestjs/core';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 import { E2EUtils } from './utils/e2e-utils';
-import { UserFactory } from './factories/users.factory';
 
 describe('Users (e2e)', () => {
   let app: INestApplication;
@@ -79,7 +78,7 @@ describe('Users (e2e)', () => {
     await E2EUtils.createUser1(prisma)
 
     const user = E2EUtils.user()
-    
+
     return await request(app.getHttpServer())
       .post('/users/sign-in')
       .send(user)
